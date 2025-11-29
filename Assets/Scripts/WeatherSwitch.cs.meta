@@ -25,7 +25,7 @@ MonoImporter:
   - snowBtn: {instanceID: 0}
   - mainLight: {instanceID: 0}
   - statusText: {instanceID: 0}
-  - rainParticle: {instanceID: 0}
+  - rainParticle: {fileID: 6149853559921813730, guid: 87c172949c7d7de44a54e2a1d7bf9524, type: 3}
   - snowParticle: {instanceID: 0}
   - realTimeFetcher: {instanceID: 0}
   - realTimeToggle: {instanceID: 0}

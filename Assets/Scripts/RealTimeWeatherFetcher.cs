@@ -234,8 +234,8 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         int hour = beijingTime.Hour;
 
         if (hour >= 6 && hour < 17) return "Day";      // 6:00-16:59 白天
-        if (hour >= 17 && hour < 19) return "Dusk";    // 17:00-18:59 黄昏
-        return "Night";                               // 19:00-5:59 夜晚
+        if (hour >= 17 && hour < 18) return "Dusk";    // 17:00-17:59 黄昏
+        return "Night";                               // 18:00-5:59 夜晚
     }
 
     // 获取原始数据

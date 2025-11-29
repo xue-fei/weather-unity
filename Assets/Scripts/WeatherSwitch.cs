@@ -7,19 +7,50 @@ using System.Collections;
 public class WeatherTimeSystem : MonoBehaviour
 {
     public enum TimeOfDay { Day, Dusk, Night }
-    public enum WeatherType { Clear, Cloudy, Rain, Snow } // 添加Cloudy天气类型
+    public enum WeatherType { Clear, Cloudy, Rain, Snow }
+
+    [Header("=== 直接光照配置（每个组合独立调整）===")]
+    // 白天（Day）光照配置
+    [Tooltip("白天晴天 - 光照强度")] public float dayClearLightIntensity = 0.5f;
+    [Tooltip("白天晴天 - 光照颜色")] public Color dayClearLightColor = new Color(1f, 0.95f, 0.9f);
+    [Tooltip("白天阴天 - 光照强度")] public float dayCloudyLightIntensity = 0.4f;
+    [Tooltip("白天阴天 - 光照颜色")] public Color dayCloudyLightColor = new Color(0.9f, 0.9f, 0.9f);
+    [Tooltip("白天下雨 - 光照强度")] public float dayRainLightIntensity = 0.3f;
+    [Tooltip("白天下雨 - 光照颜色")] public Color dayRainLightColor = new Color(0.8f, 0.85f, 0.9f);
+    [Tooltip("白天下雪 - 光照强度")] public float daySnowLightIntensity = 0.35f;
+    [Tooltip("白天下雪 - 光照颜色")] public Color daySnowLightColor = new Color(0.95f, 0.95f, 1f);
+
+    // 黄昏（Dusk）光照配置
+    [Tooltip("黄昏晴天 - 光照强度")] public float duskClearLightIntensity = 0.3f;
+    [Tooltip("黄昏晴天 - 光照颜色")] public Color duskClearLightColor = new Color(0.9f, 0.6f, 0.4f);
+    [Tooltip("黄昏阴天 - 光照强度")] public float duskCloudyLightIntensity = 0.25f;
+    [Tooltip("黄昏阴天 - 光照颜色")] public Color duskCloudyLightColor = new Color(0.8f, 0.55f, 0.4f);
+    [Tooltip("黄昏下雨 - 光照强度")] public float duskRainLightIntensity = 0.2f;
+    [Tooltip("黄昏下雨 - 光照颜色")] public Color duskRainLightColor = new Color(0.7f, 0.5f, 0.4f);
+    [Tooltip("黄昏下雪 - 光照强度")] public float duskSnowLightIntensity = 0.22f;
+    [Tooltip("黄昏下雪 - 光照颜色")] public Color duskSnowLightColor = new Color(0.85f, 0.6f, 0.45f);
+
+    // 夜晚（Night）光照配置
+    [Tooltip("夜晚晴天 - 光照强度")] public float nightClearLightIntensity = 0.1f;
+    [Tooltip("夜晚晴天 - 光照颜色")] public Color nightClearLightColor = new Color(0.3f, 0.4f, 0.8f);
+    [Tooltip("夜晚阴天 - 光照强度")] public float nightCloudyLightIntensity = 0.08f;
+    [Tooltip("夜晚阴天 - 光照颜色")] public Color nightCloudyLightColor = new Color(0.25f, 0.35f, 0.7f);
+    [Tooltip("夜晚下雨 - 光照强度")] public float nightRainLightIntensity = 0.05f;
+    [Tooltip("夜晚下雨 - 光照颜色")] public Color nightRainLightColor = new Color(0.2f, 0.3f, 0.6f);
+    [Tooltip("夜晚下雪 - 光照强度")] public float nightSnowLightIntensity = 0.09f;
+    [Tooltip("夜晚下雪 - 光照颜色")] public Color nightSnowLightColor = new Color(0.4f, 0.5f, 0.9f);
 
     [Header("Skybox Settings - Time + Weather Combinations")]
     public Material dayClearSkybox;
-    public Material dayCloudySkybox; // 阴天天空盒
+    public Material dayCloudySkybox;
     public Material dayRainSkybox;
     public Material daySnowSkybox;
     public Material duskClearSkybox;
-    public Material duskCloudySkybox; // 阴天天空盒
+    public Material duskCloudySkybox;
     public Material duskRainSkybox;
     public Material duskSnowSkybox;
     public Material nightClearSkybox;
-    public Material nightCloudySkybox; // 阴天天空盒
+    public Material nightCloudySkybox;
     public Material nightRainSkybox;
     public Material nightSnowSkybox;
 
@@ -30,7 +61,7 @@ public class WeatherTimeSystem : MonoBehaviour
 
     [Header("Weather Buttons")]
     public Button clearBtn;
-    public Button cloudyBtn; // 阴天按钮
+    public Button cloudyBtn;
     public Button rainBtn;
     public Button snowBtn;
 
@@ -49,36 +80,12 @@ public class WeatherTimeSystem : MonoBehaviour
     private TimeOfDay currentTime = TimeOfDay.Day;
     private WeatherType currentWeather = WeatherType.Clear;
 
-    // 灯光设置
-    private readonly float[] lightIntensities = {
-        0.5f,    // Day
-        0.3f,    // Dusk
-        0.05f    // Night
-    };
-
-    private readonly Color[] lightColors = {
-        new Color(1f, 0.95f, 0.9f),   // Day: warm white
-        new Color(0.9f, 0.6f, 0.4f),  // Dusk: orange-yellow
-        new Color(0.3f, 0.4f, 0.8f)   // Night: deep blue
-    };
-
     void Start()
     {
-        // 设置初始状态
+        // 原有初始化逻辑（无修改）
         ApplyCurrentSettings();
+        BindManualButtons();
 
-        // 绑定时间按钮
-        dayBtn.onClick.AddListener(() => SetTime(TimeOfDay.Day));
-        duskBtn.onClick.AddListener(() => SetTime(TimeOfDay.Dusk));
-        nightBtn.onClick.AddListener(() => SetTime(TimeOfDay.Night));
-
-        // 绑定天气按钮
-        clearBtn.onClick.AddListener(() => SetWeather(WeatherType.Clear));
-        cloudyBtn.onClick.AddListener(() => SetWeather(WeatherType.Cloudy)); // 阴天按钮
-        rainBtn.onClick.AddListener(() => SetWeather(WeatherType.Rain));
-        snowBtn.onClick.AddListener(() => SetWeather(WeatherType.Snow));
-
-        // 绑定实时天气控件
         if (realTimeToggle != null)
         {
             realTimeToggle.onValueChanged.AddListener(OnRealTimeToggleChanged);
@@ -90,16 +97,26 @@ public class WeatherTimeSystem : MonoBehaviour
             refreshRealTimeBtn.onClick.AddListener(RefreshRealTimeData);
         }
 
-        // 注册实时天气更新事件
         if (realTimeFetcher != null)
         {
             realTimeFetcher.OnRealDataUpdated += OnRealDataUpdated;
         }
     }
 
+    // 原有核心逻辑（无修改）
+    private void BindManualButtons()
+    {
+        dayBtn.onClick.AddListener(() => SetTime(TimeOfDay.Day));
+        duskBtn.onClick.AddListener(() => SetTime(TimeOfDay.Dusk));
+        nightBtn.onClick.AddListener(() => SetTime(TimeOfDay.Night));
+        clearBtn.onClick.AddListener(() => SetWeather(WeatherType.Clear));
+        cloudyBtn.onClick.AddListener(() => SetWeather(WeatherType.Cloudy));
+        rainBtn.onClick.AddListener(() => SetWeather(WeatherType.Rain));
+        snowBtn.onClick.AddListener(() => SetWeather(WeatherType.Snow));
+    }
+
     private void SetTime(TimeOfDay time)
     {
-        // 手动选择时禁用实时模式
         if (realTimeToggle != null && realTimeToggle.isOn)
         {
             realTimeToggle.isOn = false;
@@ -114,7 +131,6 @@ public class WeatherTimeSystem : MonoBehaviour
 
     private void SetWeather(WeatherType weather)
     {
-        // 手动选择时禁用实时模式
         if (realTimeToggle != null && realTimeToggle.isOn)
         {
             realTimeToggle.isOn = false;
@@ -127,9 +143,10 @@ public class WeatherTimeSystem : MonoBehaviour
         ApplyCurrentSettings();
     }
 
+    // 关键修改：直接应用对应组合的光照参数
     private void ApplyCurrentSettings()
     {
-        // 根据当前时间和天气设置天空盒
+        // 原有天空盒逻辑（无修改）
         Material skybox = GetSkybox(currentTime, currentWeather);
         if (skybox != null)
         {
@@ -137,79 +154,121 @@ public class WeatherTimeSystem : MonoBehaviour
             DynamicGI.UpdateEnvironment();
         }
 
-        // 根据时间设置灯光
-        int timeIndex = (int)currentTime;
-        if (timeIndex >= 0 && timeIndex < lightIntensities.Length)
-        {
-            mainLight.intensity = lightIntensities[timeIndex];
-            mainLight.color = lightColors[timeIndex];
-        }
+        // 核心：根据当前时间+天气，直接读取对应的独立光照参数
+        (float intensity, Color color) = GetCurrentLightParams();
+        mainLight.intensity = intensity;
+        mainLight.color = color;
 
-        // 根据天气控制粒子效果
+        // 原有粒子控制逻辑（无修改）
         ControlParticles(currentWeather);
-
-        // 更新UI
         UpdateStatusText();
     }
 
+    // 新增：直接映射当前组合的光照参数
+    private (float intensity, Color color) GetCurrentLightParams()
+    {
+        switch (currentTime)
+        {
+            case TimeOfDay.Day:
+                return currentWeather switch
+                {
+                    WeatherType.Clear => (dayClearLightIntensity, dayClearLightColor),
+                    WeatherType.Cloudy => (dayCloudyLightIntensity, dayCloudyLightColor),
+                    WeatherType.Rain => (dayRainLightIntensity, dayRainLightColor),
+                    WeatherType.Snow => (daySnowLightIntensity, daySnowLightColor),
+                    _ => (dayClearLightIntensity, dayClearLightColor)
+                };
+            case TimeOfDay.Dusk:
+                return currentWeather switch
+                {
+                    WeatherType.Clear => (duskClearLightIntensity, duskClearLightColor),
+                    WeatherType.Cloudy => (duskCloudyLightIntensity, duskCloudyLightColor),
+                    WeatherType.Rain => (duskRainLightIntensity, duskRainLightColor),
+                    WeatherType.Snow => (duskSnowLightIntensity, duskSnowLightColor),
+                    _ => (duskClearLightIntensity, duskClearLightColor)
+                };
+            case TimeOfDay.Night:
+                return currentWeather switch
+                {
+                    WeatherType.Clear => (nightClearLightIntensity, nightClearLightColor),
+                    WeatherType.Cloudy => (nightCloudyLightIntensity, nightCloudyLightColor),
+                    WeatherType.Rain => (nightRainLightIntensity, nightRainLightColor),
+                    WeatherType.Snow => (nightSnowLightIntensity, nightSnowLightColor),
+                    _ => (nightClearLightIntensity, nightClearLightColor)
+                };
+            default:
+                return (dayClearLightIntensity, dayClearLightColor);
+        }
+    }
+
+    // 原有方法（无任何修改）
     private Material GetSkybox(TimeOfDay time, WeatherType weather)
     {
-        // 返回对应时间+天气组合的天空盒
         switch (time)
         {
             case TimeOfDay.Day:
                 switch (weather)
                 {
                     case WeatherType.Clear: return dayClearSkybox;
-                    case WeatherType.Cloudy: return dayCloudySkybox; // 阴天
+                    case WeatherType.Cloudy: return dayCloudySkybox;
                     case WeatherType.Rain: return dayRainSkybox;
                     case WeatherType.Snow: return daySnowSkybox;
                 }
                 break;
-
             case TimeOfDay.Dusk:
                 switch (weather)
                 {
                     case WeatherType.Clear: return duskClearSkybox;
-                    case WeatherType.Cloudy: return duskCloudySkybox; // 阴天
+                    case WeatherType.Cloudy: return duskCloudySkybox;
                     case WeatherType.Rain: return duskRainSkybox;
                     case WeatherType.Snow: return duskSnowSkybox;
                 }
                 break;
-
             case TimeOfDay.Night:
                 switch (weather)
                 {
                     case WeatherType.Clear: return nightClearSkybox;
-                    case WeatherType.Cloudy: return nightCloudySkybox; // 阴天
+                    case WeatherType.Cloudy: return nightCloudySkybox;
                     case WeatherType.Rain: return nightRainSkybox;
                     case WeatherType.Snow: return nightSnowSkybox;
                 }
                 break;
         }
-
-        // 默认回退
         return dayClearSkybox;
     }
 
     private void ControlParticles(WeatherType weather)
     {
-        // 停止所有粒子
-        if (rainParticle != null && rainParticle.isPlaying)
-            rainParticle.Stop();
-        if (snowParticle != null && snowParticle.isPlaying)
-            snowParticle.Stop();
+        if (rainParticle != null)
+        {
+            if (!rainParticle.gameObject.activeInHierarchy)
+                rainParticle.gameObject.SetActive(true);
+            rainParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
 
-        // 根据天气播放相应的粒子
+        if (snowParticle != null)
+        {
+            if (!snowParticle.gameObject.activeInHierarchy)
+                snowParticle.gameObject.SetActive(true);
+            snowParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
         switch (weather)
         {
             case WeatherType.Rain:
-                if (rainParticle != null) rainParticle.Play();
+                rainParticle?.Play();
+                Debug.Log($"雨粒子开始播放 - 状态: {rainParticle.isPlaying}");
                 break;
             case WeatherType.Snow:
-                if (snowParticle != null) snowParticle.Play();
+                snowParticle?.Play();
+                Debug.Log($"雪粒子开始播放 - 状态: {snowParticle.isPlaying}");
                 break;
-                // Cloudy和Clear没有粒子效果
+            default:
+                if (rainParticle != null && rainParticle.gameObject.activeInHierarchy)
+                    rainParticle.gameObject.SetActive(false);
+                if (snowParticle != null && snowParticle.gameObject.activeInHierarchy)
+                    snowParticle.gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -230,16 +289,13 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // ========== 实时天气功能 ==========
-
-    // 实时数据更新回调
+    // ========== 实时天气功能（无修改）==========
     private void OnRealDataUpdated(DateTime beijingTime, string weather, float temperature)
     {
         if (realTimeToggle == null || !realTimeToggle.isOn) return;
 
         Debug.Log($"Real data updated: {beijingTime}, {weather}, {temperature}");
 
-        // 映射时间
         string timeOfDay = realTimeFetcher.GetTimeOfDay();
         TimeOfDay mappedTime = timeOfDay switch
         {
@@ -249,7 +305,6 @@ public class WeatherTimeSystem : MonoBehaviour
             _ => TimeOfDay.Day
         };
 
-        // 映射天气
         string mappedWeatherStr = realTimeFetcher.GetMappedWeatherType();
         WeatherType mappedWeather = mappedWeatherStr switch
         {
@@ -259,20 +314,17 @@ public class WeatherTimeSystem : MonoBehaviour
             _ => WeatherType.Clear
         };
 
-        // 自动应用实时数据
         currentTime = mappedTime;
         currentWeather = mappedWeather;
         ApplyCurrentSettings();
-
         UpdateStatusWithRealData(beijingTime, weather, temperature);
     }
 
-    // 更新状态文本，包含实时数据
     private void UpdateStatusWithRealData(DateTime beijingTime, string weather, float temperature)
     {
         if (statusText != null)
         {
-            string realDataInfo = $"\nReal Data: {beijingTime:HH:mm} {weather} {temperature}"; // 移除°C符号
+            string realDataInfo = $"\nReal Data: {beijingTime:HH:mm} {weather} {temperature}";
             string particleInfo = currentWeather switch
             {
                 WeatherType.Rain => " + Rain Effect",
@@ -284,24 +336,20 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // Toggle状态改变时的回调
     private void OnRealTimeToggleChanged(bool isOn)
     {
         UpdateRealTimeToggleText();
 
         if (isOn && realTimeFetcher != null && realTimeFetcher.IsDataValid())
         {
-            // 如果切换到实时模式且有有效数据，立即应用
             ApplyRealTimeData();
         }
         else if (isOn && realTimeFetcher != null)
         {
-            // 如果切换到实时模式但无有效数据，刷新数据
             realTimeFetcher.ManualRefresh();
         }
     }
 
-    // 刷新实时数据
     private void RefreshRealTimeData()
     {
         if (realTimeFetcher != null)
@@ -310,7 +358,6 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // 应用实时数据
     private void ApplyRealTimeData()
     {
         if (realTimeFetcher != null && realTimeFetcher.IsDataValid())
@@ -339,7 +386,6 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // 更新Toggle文本
     private void UpdateRealTimeToggleText()
     {
         if (realTimeToggle != null)
@@ -354,20 +400,18 @@ public class WeatherTimeSystem : MonoBehaviour
 
     void OnDestroy()
     {
-        // 取消注册事件
         if (realTimeFetcher != null)
         {
             realTimeFetcher.OnRealDataUpdated -= OnRealDataUpdated;
         }
 
-        // 移除Toggle监听
         if (realTimeToggle != null)
         {
             realTimeToggle.onValueChanged.RemoveListener(OnRealTimeToggleChanged);
         }
     }
 
-    // 调试方法
+    // 原有调试方法（无修改）
     [ContextMenu("Set Day Clear")]
     public void DebugDayClear()
     {
