@@ -1,6 +1,10 @@
 Logs/
-Packages/
 ProjectSettings/
 UserSettings/
 Library/
-**.meta
+.vsconfig
+*.csproj
+obj/
+Temp/
+.vs
+*.sln

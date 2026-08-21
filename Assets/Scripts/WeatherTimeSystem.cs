@@ -2,43 +2,42 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
-using System.Collections;
 
 public class WeatherTimeSystem : MonoBehaviour
 {
     public enum TimeOfDay { Day, Dusk, Night }
     public enum WeatherType { Clear, Cloudy, Rain, Snow }
 
-    [Header("=== Ö±½Ó¹âÕÕÅäÖÃ£¨Ã¿¸ö×éºÏ¶ÀÁ¢µ÷Õû£©===")]
-    // °×Ìì£¨Day£©¹âÕÕÅäÖÃ
-    [Tooltip("°×ÌìÇçÌì - ¹âÕÕÇ¿¶È")] public float dayClearLightIntensity = 0.5f;
-    [Tooltip("°×ÌìÇçÌì - ¹âÕÕÑÕÉ«")] public Color dayClearLightColor = new Color(1f, 0.95f, 0.9f);
-    [Tooltip("°×ÌìÒõÌì - ¹âÕÕÇ¿¶È")] public float dayCloudyLightIntensity = 0.4f;
-    [Tooltip("°×ÌìÒõÌì - ¹âÕÕÑÕÉ«")] public Color dayCloudyLightColor = new Color(0.9f, 0.9f, 0.9f);
-    [Tooltip("°×ÌìÏÂÓê - ¹âÕÕÇ¿¶È")] public float dayRainLightIntensity = 0.3f;
-    [Tooltip("°×ÌìÏÂÓê - ¹âÕÕÑÕÉ«")] public Color dayRainLightColor = new Color(0.8f, 0.85f, 0.9f);
-    [Tooltip("°×ÌìÏÂÑ© - ¹âÕÕÇ¿¶È")] public float daySnowLightIntensity = 0.35f;
-    [Tooltip("°×ÌìÏÂÑ© - ¹âÕÕÑÕÉ«")] public Color daySnowLightColor = new Color(0.95f, 0.95f, 1f);
+    [Header("=== ç›´æ¥å…‰ç…§é…ç½®ï¼ˆæ¯ä¸ªç»„åˆç‹¬ç«‹è°ƒæ•´ï¼‰===")]
+    // ç™½å¤©ï¼ˆDayï¼‰å…‰ç…§é…ç½®
+    [Tooltip("ç™½å¤©æ™´å¤© - å…‰ç…§å¼ºåº¦")] public float dayClearLightIntensity = 0.5f;
+    [Tooltip("ç™½å¤©æ™´å¤© - å…‰ç…§é¢œè‰²")] public Color dayClearLightColor = new Color(1f, 0.95f, 0.9f);
+    [Tooltip("ç™½å¤©é˜´å¤© - å…‰ç…§å¼ºåº¦")] public float dayCloudyLightIntensity = 0.4f;
+    [Tooltip("ç™½å¤©é˜´å¤© - å…‰ç…§é¢œè‰²")] public Color dayCloudyLightColor = new Color(0.9f, 0.9f, 0.9f);
+    [Tooltip("ç™½å¤©ä¸‹é›¨ - å…‰ç…§å¼ºåº¦")] public float dayRainLightIntensity = 0.3f;
+    [Tooltip("ç™½å¤©ä¸‹é›¨ - å…‰ç…§é¢œè‰²")] public Color dayRainLightColor = new Color(0.8f, 0.85f, 0.9f);
+    [Tooltip("ç™½å¤©ä¸‹é›ª - å…‰ç…§å¼ºåº¦")] public float daySnowLightIntensity = 0.35f;
+    [Tooltip("ç™½å¤©ä¸‹é›ª - å…‰ç…§é¢œè‰²")] public Color daySnowLightColor = new Color(0.95f, 0.95f, 1f);
 
-    // »Æ»è£¨Dusk£©¹âÕÕÅäÖÃ
-    [Tooltip("»Æ»èÇçÌì - ¹âÕÕÇ¿¶È")] public float duskClearLightIntensity = 0.3f;
-    [Tooltip("»Æ»èÇçÌì - ¹âÕÕÑÕÉ«")] public Color duskClearLightColor = new Color(0.9f, 0.6f, 0.4f);
-    [Tooltip("»Æ»èÒõÌì - ¹âÕÕÇ¿¶È")] public float duskCloudyLightIntensity = 0.25f;
-    [Tooltip("»Æ»èÒõÌì - ¹âÕÕÑÕÉ«")] public Color duskCloudyLightColor = new Color(0.8f, 0.55f, 0.4f);
-    [Tooltip("»Æ»èÏÂÓê - ¹âÕÕÇ¿¶È")] public float duskRainLightIntensity = 0.2f;
-    [Tooltip("»Æ»èÏÂÓê - ¹âÕÕÑÕÉ«")] public Color duskRainLightColor = new Color(0.7f, 0.5f, 0.4f);
-    [Tooltip("»Æ»èÏÂÑ© - ¹âÕÕÇ¿¶È")] public float duskSnowLightIntensity = 0.22f;
-    [Tooltip("»Æ»èÏÂÑ© - ¹âÕÕÑÕÉ«")] public Color duskSnowLightColor = new Color(0.85f, 0.6f, 0.45f);
+    // é»„æ˜ï¼ˆDuskï¼‰å…‰ç…§é…ç½®
+    [Tooltip("é»„æ˜æ™´å¤© - å…‰ç…§å¼ºåº¦")] public float duskClearLightIntensity = 0.3f;
+    [Tooltip("é»„æ˜æ™´å¤© - å…‰ç…§é¢œè‰²")] public Color duskClearLightColor = new Color(0.9f, 0.6f, 0.4f);
+    [Tooltip("é»„æ˜é˜´å¤© - å…‰ç…§å¼ºåº¦")] public float duskCloudyLightIntensity = 0.25f;
+    [Tooltip("é»„æ˜é˜´å¤© - å…‰ç…§é¢œè‰²")] public Color duskCloudyLightColor = new Color(0.8f, 0.55f, 0.4f);
+    [Tooltip("é»„æ˜ä¸‹é›¨ - å…‰ç…§å¼ºåº¦")] public float duskRainLightIntensity = 0.2f;
+    [Tooltip("é»„æ˜ä¸‹é›¨ - å…‰ç…§é¢œè‰²")] public Color duskRainLightColor = new Color(0.7f, 0.5f, 0.4f);
+    [Tooltip("é»„æ˜ä¸‹é›ª - å…‰ç…§å¼ºåº¦")] public float duskSnowLightIntensity = 0.22f;
+    [Tooltip("é»„æ˜ä¸‹é›ª - å…‰ç…§é¢œè‰²")] public Color duskSnowLightColor = new Color(0.85f, 0.6f, 0.45f);
 
-    // Ò¹Íí£¨Night£©¹âÕÕÅäÖÃ
-    [Tooltip("Ò¹ÍíÇçÌì - ¹âÕÕÇ¿¶È")] public float nightClearLightIntensity = 0.1f;
-    [Tooltip("Ò¹ÍíÇçÌì - ¹âÕÕÑÕÉ«")] public Color nightClearLightColor = new Color(0.3f, 0.4f, 0.8f);
-    [Tooltip("Ò¹ÍíÒõÌì - ¹âÕÕÇ¿¶È")] public float nightCloudyLightIntensity = 0.08f;
-    [Tooltip("Ò¹ÍíÒõÌì - ¹âÕÕÑÕÉ«")] public Color nightCloudyLightColor = new Color(0.25f, 0.35f, 0.7f);
-    [Tooltip("Ò¹ÍíÏÂÓê - ¹âÕÕÇ¿¶È")] public float nightRainLightIntensity = 0.05f;
-    [Tooltip("Ò¹ÍíÏÂÓê - ¹âÕÕÑÕÉ«")] public Color nightRainLightColor = new Color(0.2f, 0.3f, 0.6f);
-    [Tooltip("Ò¹ÍíÏÂÑ© - ¹âÕÕÇ¿¶È")] public float nightSnowLightIntensity = 0.09f;
-    [Tooltip("Ò¹ÍíÏÂÑ© - ¹âÕÕÑÕÉ«")] public Color nightSnowLightColor = new Color(0.4f, 0.5f, 0.9f);
+    // å¤œæ™šï¼ˆNightï¼‰å…‰ç…§é…ç½®
+    [Tooltip("å¤œæ™šæ™´å¤© - å…‰ç…§å¼ºåº¦")] public float nightClearLightIntensity = 0.1f;
+    [Tooltip("å¤œæ™šæ™´å¤© - å…‰ç…§é¢œè‰²")] public Color nightClearLightColor = new Color(0.3f, 0.4f, 0.8f);
+    [Tooltip("å¤œæ™šé˜´å¤© - å…‰ç…§å¼ºåº¦")] public float nightCloudyLightIntensity = 0.08f;
+    [Tooltip("å¤œæ™šé˜´å¤© - å…‰ç…§é¢œè‰²")] public Color nightCloudyLightColor = new Color(0.25f, 0.35f, 0.7f);
+    [Tooltip("å¤œæ™šä¸‹é›¨ - å…‰ç…§å¼ºåº¦")] public float nightRainLightIntensity = 0.05f;
+    [Tooltip("å¤œæ™šä¸‹é›¨ - å…‰ç…§é¢œè‰²")] public Color nightRainLightColor = new Color(0.2f, 0.3f, 0.6f);
+    [Tooltip("å¤œæ™šä¸‹é›ª - å…‰ç…§å¼ºåº¦")] public float nightSnowLightIntensity = 0.09f;
+    [Tooltip("å¤œæ™šä¸‹é›ª - å…‰ç…§é¢œè‰²")] public Color nightSnowLightColor = new Color(0.4f, 0.5f, 0.9f);
 
     [Header("Skybox Settings - Time + Weather Combinations")]
     public Material dayClearSkybox;
@@ -76,13 +75,13 @@ public class WeatherTimeSystem : MonoBehaviour
     public Toggle realTimeToggle;
     public Button refreshRealTimeBtn;
 
-    // µ±Ç°×´Ì¬
+    // å½“å‰çŠ¶æ€
     private TimeOfDay currentTime = TimeOfDay.Day;
     private WeatherType currentWeather = WeatherType.Clear;
 
     void Start()
     {
-        // Ô­ÓĞ³õÊ¼»¯Âß¼­£¨ÎŞĞŞ¸Ä£©
+        // åŸæœ‰åˆå§‹åŒ–é€»è¾‘ï¼ˆæ— ä¿®æ”¹ï¼‰
         ApplyCurrentSettings();
         BindManualButtons();
 
@@ -103,7 +102,7 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // Ô­ÓĞºËĞÄÂß¼­£¨ÎŞĞŞ¸Ä£©
+    // åŸæœ‰æ ¸å¿ƒé€»è¾‘ï¼ˆæ— ä¿®æ”¹ï¼‰
     private void BindManualButtons()
     {
         dayBtn.onClick.AddListener(() => SetTime(TimeOfDay.Day));
@@ -143,10 +142,10 @@ public class WeatherTimeSystem : MonoBehaviour
         ApplyCurrentSettings();
     }
 
-    // ¹Ø¼üĞŞ¸Ä£ºÖ±½ÓÓ¦ÓÃ¶ÔÓ¦×éºÏµÄ¹âÕÕ²ÎÊı
+    // å…³é”®ä¿®æ”¹ï¼šç›´æ¥åº”ç”¨å¯¹åº”ç»„åˆçš„å…‰ç…§å‚æ•°
     private void ApplyCurrentSettings()
     {
-        // Ô­ÓĞÌì¿ÕºĞÂß¼­£¨ÎŞĞŞ¸Ä£©
+        // åŸæœ‰å¤©ç©ºç›’é€»è¾‘ï¼ˆæ— ä¿®æ”¹ï¼‰
         Material skybox = GetSkybox(currentTime, currentWeather);
         if (skybox != null)
         {
@@ -154,17 +153,17 @@ public class WeatherTimeSystem : MonoBehaviour
             DynamicGI.UpdateEnvironment();
         }
 
-        // ºËĞÄ£º¸ù¾İµ±Ç°Ê±¼ä+ÌìÆø£¬Ö±½Ó¶ÁÈ¡¶ÔÓ¦µÄ¶ÀÁ¢¹âÕÕ²ÎÊı
+        // æ ¸å¿ƒï¼šæ ¹æ®å½“å‰æ—¶é—´+å¤©æ°”ï¼Œç›´æ¥è¯»å–å¯¹åº”çš„ç‹¬ç«‹å…‰ç…§å‚æ•°
         (float intensity, Color color) = GetCurrentLightParams();
         mainLight.intensity = intensity;
         mainLight.color = color;
 
-        // Ô­ÓĞÁ£×Ó¿ØÖÆÂß¼­£¨ÎŞĞŞ¸Ä£©
+        // åŸæœ‰ç²’å­æ§åˆ¶é€»è¾‘ï¼ˆæ— ä¿®æ”¹ï¼‰
         ControlParticles(currentWeather);
         UpdateStatusText();
     }
 
-    // ĞÂÔö£ºÖ±½ÓÓ³Éäµ±Ç°×éºÏµÄ¹âÕÕ²ÎÊı
+    // æ–°å¢ï¼šç›´æ¥æ˜ å°„å½“å‰ç»„åˆçš„å…‰ç…§å‚æ•°
     private (float intensity, Color color) GetCurrentLightParams()
     {
         switch (currentTime)
@@ -201,7 +200,7 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // Ô­ÓĞ·½·¨£¨ÎŞÈÎºÎĞŞ¸Ä£©
+    // åŸæœ‰æ–¹æ³•ï¼ˆæ— ä»»ä½•ä¿®æ”¹ï¼‰
     private Material GetSkybox(TimeOfDay time, WeatherType weather)
     {
         switch (time)
@@ -257,11 +256,11 @@ public class WeatherTimeSystem : MonoBehaviour
         {
             case WeatherType.Rain:
                 rainParticle?.Play();
-                Debug.Log($"ÓêÁ£×Ó¿ªÊ¼²¥·Å - ×´Ì¬: {rainParticle.isPlaying}");
+                Debug.Log($"é›¨ç²’å­å¼€å§‹æ’­æ”¾ - çŠ¶æ€: {rainParticle.isPlaying}");
                 break;
             case WeatherType.Snow:
                 snowParticle?.Play();
-                Debug.Log($"Ñ©Á£×Ó¿ªÊ¼²¥·Å - ×´Ì¬: {snowParticle.isPlaying}");
+                Debug.Log($"é›ªç²’å­å¼€å§‹æ’­æ”¾ - çŠ¶æ€: {snowParticle.isPlaying}");
                 break;
             default:
                 if (rainParticle != null && rainParticle.gameObject.activeInHierarchy)
@@ -289,7 +288,7 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // ========== ÊµÊ±ÌìÆø¹¦ÄÜ£¨ÎŞĞŞ¸Ä£©==========
+    // ========== å®æ—¶å¤©æ°”åŠŸèƒ½ï¼ˆæ— ä¿®æ”¹ï¼‰==========
     private void OnRealDataUpdated(DateTime beijingTime, string weather, float temperature)
     {
         if (realTimeToggle == null || !realTimeToggle.isOn) return;
@@ -411,7 +410,7 @@ public class WeatherTimeSystem : MonoBehaviour
         }
     }
 
-    // Ô­ÓĞµ÷ÊÔ·½·¨£¨ÎŞĞŞ¸Ä£©
+    // åŸæœ‰è°ƒè¯•æ–¹æ³•ï¼ˆæ— ä¿®æ”¹ï¼‰
     [ContextMenu("Set Day Clear")]
     public void DebugDayClear()
     {

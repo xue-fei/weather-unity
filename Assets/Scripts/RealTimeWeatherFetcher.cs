@@ -19,43 +19,43 @@ public class RealTimeWeatherFetcher : MonoBehaviour
     public TextMeshProUGUI realTimeStatusText;
     public Button refreshButton;
 
-    // µ±Ç°Êı¾İ
+    // å½“å‰æ•°æ®
     private DateTime beijingTime;
     private string currentWeather;
     private float currentTemperature;
     private bool isDataValid = false;
 
-    // ÊÂ¼ş
+    // äº‹ä»¶
     public event Action<DateTime, string, float> OnRealDataUpdated;
 
-    // ÌìÆø¹Ø¼ü´ÊÓ³Éä
+    // å¤©æ°”å…³é”®è¯æ˜ å°„
     private Dictionary<string, string> weatherKeywords = new Dictionary<string, string>
     {
-        {"Çç", "Clear"},
-        {"¶àÔÆ", "Cloudy"},
-        {"Òõ", "Cloudy"}, // ÒõÌìÓ³ÉäÎªCloudy
-        {"Îí", "Foggy"},
-        {"Óê", "Rain"},
-        {"Ğ¡Óê", "Rain"},
-        {"ÖĞÓê", "Rain"},
-        {"´óÓê", "Rain"},
-        {"±©Óê", "Rain"},
-        {"Ñ©", "Snow"},
-        {"Ğ¡Ñ©", "Snow"},
-        {"ÖĞÑ©", "Snow"},
-        {"´óÑ©", "Snow"},
-        {"Óê¼ĞÑ©", "Snow"}
+        {"æ™´", "Clear"},
+        {"å¤šäº‘", "Cloudy"},
+        {"é˜´", "Cloudy"}, // é˜´å¤©æ˜ å°„ä¸ºCloudy
+        {"é›¾", "Foggy"},
+        {"é›¨", "Rain"},
+        {"å°é›¨", "Rain"},
+        {"ä¸­é›¨", "Rain"},
+        {"å¤§é›¨", "Rain"},
+        {"æš´é›¨", "Rain"},
+        {"é›ª", "Snow"},
+        {"å°é›ª", "Snow"},
+        {"ä¸­é›ª", "Snow"},
+        {"å¤§é›ª", "Snow"},
+        {"é›¨å¤¹é›ª", "Snow"}
     };
 
     void Start()
     {
-        // °ó¶¨Ë¢ĞÂ°´Å¥
+        // ç»‘å®šåˆ·æ–°æŒ‰é’®
         if (refreshButton != null)
         {
             refreshButton.onClick.AddListener(ManualRefresh);
         }
 
-        // ¿ªÊ¼»ñÈ¡Êı¾İ
+        // å¼€å§‹è·å–æ•°æ®
         StartCoroutine(GetRealTimeData());
 
         if (autoUpdate)
@@ -64,7 +64,7 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         }
     }
 
-    // ×Ô¶¯¸üĞÂĞ­³Ì
+    // è‡ªåŠ¨æ›´æ–°åç¨‹
     private IEnumerator AutoUpdateCoroutine()
     {
         while (autoUpdate)
@@ -74,19 +74,19 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         }
     }
 
-    // ÊÖ¶¯Ë¢ĞÂ
+    // æ‰‹åŠ¨åˆ·æ–°
     public void ManualRefresh()
     {
         StartCoroutine(GetRealTimeData());
     }
 
-    // »ñÈ¡ÊµÊ±Êı¾İ
+    // è·å–å®æ—¶æ•°æ®
     private IEnumerator GetRealTimeData()
     {
         yield return StartCoroutine(FetchBeijingTimeFromWeb());
         yield return StartCoroutine(GetWeatherData());
 
-        // Êı¾İ»ñÈ¡Íê³Éºó´¥·¢ÊÂ¼ş
+        // æ•°æ®è·å–å®Œæˆåè§¦å‘äº‹ä»¶
         if (isDataValid)
         {
             OnRealDataUpdated?.Invoke(beijingTime, currentWeather, currentTemperature);
@@ -94,7 +94,7 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         }
     }
 
-    // ´ÓÍøÂç»ñÈ¡±±¾©Ê±¼ä
+    // ä»ç½‘ç»œè·å–åŒ—äº¬æ—¶é—´
     private IEnumerator FetchBeijingTimeFromWeb()
     {
         string url = "https://www.baidu.com";
@@ -108,12 +108,12 @@ public class RealTimeWeatherFetcher : MonoBehaviour
             if (!string.IsNullOrEmpty(worldTime))
             {
                 DateTime utcTime = DateTime.Parse(worldTime).ToUniversalTime();
-                beijingTime = utcTime.AddHours(8); // ×ª»»Îª±±¾©Ê±¼ä (UTC+8)
+                beijingTime = utcTime.AddHours(8); // è½¬æ¢ä¸ºåŒ—äº¬æ—¶é—´ (UTC+8)
                 Debug.Log($"Beijing Time obtained: {beijingTime}");
             }
             else
             {
-                // ±¸ÓÃ·½°¸£ºÊ¹ÓÃÏµÍ³Ê±¼ä
+                // å¤‡ç”¨æ–¹æ¡ˆï¼šä½¿ç”¨ç³»ç»Ÿæ—¶é—´
                 beijingTime = DateTime.Now;
                 Debug.LogWarning("Failed to get time from Baidu, using system time");
             }
@@ -125,11 +125,11 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         }
     }
 
-    // »ñÈ¡ÌìÆøÊı¾İ
+    // è·å–å¤©æ°”æ•°æ®
     private IEnumerator GetWeatherData()
     {
-        // ¹¹½¨°Ù¶ÈËÑË÷URL
-        string searchUrl = $"https://www.baidu.com/s?wd={city}ÌìÆø";
+        // æ„å»ºç™¾åº¦æœç´¢URL
+        string searchUrl = $"https://www.baidu.com/s?wd={city}å¤©æ°”";
         UnityWebRequest request = UnityWebRequest.Get(searchUrl);
 
         yield return request.SendWebRequest();
@@ -147,16 +147,16 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         }
     }
 
-    // ´ÓHTML½âÎöÌìÆøĞÅÏ¢
+    // ä»HTMLè§£æå¤©æ°”ä¿¡æ¯
     private void ParseWeatherFromHTML(string html)
     {
         try
         {
-            // ¼ò»¯½âÎö - Êµ¼ÊÓ¦ÓÃÖĞĞèÒª¸ü¸´ÔÓµÄHTML½âÎö
-            // ÕâÀïÖ»ÊÇ»ù±¾Ê¾Àı
+            // ç®€åŒ–è§£æ - å®é™…åº”ç”¨ä¸­éœ€è¦æ›´å¤æ‚çš„HTMLè§£æ
+            // è¿™é‡Œåªæ˜¯åŸºæœ¬ç¤ºä¾‹
 
-            // ²éÕÒÎÂ¶ÈĞÅÏ¢
-            int tempIndex = html.IndexOf("¡æ");
+            // æŸ¥æ‰¾æ¸©åº¦ä¿¡æ¯
+            int tempIndex = html.IndexOf("â„ƒ");
             if (tempIndex > 0)
             {
                 string tempSubstring = html.Substring(Math.Max(0, tempIndex - 10), 10);
@@ -167,7 +167,7 @@ public class RealTimeWeatherFetcher : MonoBehaviour
                 }
             }
 
-            // ²éÕÒÌìÆø×´¿ö
+            // æŸ¥æ‰¾å¤©æ°”çŠ¶å†µ
             foreach (var keyword in weatherKeywords.Keys)
             {
                 if (html.Contains(keyword))
@@ -179,7 +179,7 @@ public class RealTimeWeatherFetcher : MonoBehaviour
 
             if (string.IsNullOrEmpty(currentWeather))
             {
-                currentWeather = "Çç"; // Ä¬ÈÏÖµ
+                currentWeather = "æ™´"; // é»˜è®¤å€¼
             }
 
             isDataValid = true;
@@ -188,13 +188,13 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Failed to parse weather data: {e.Message}");
-            currentWeather = "Çç";
+            currentWeather = "æ™´";
             currentTemperature = 20f;
             isDataValid = false;
         }
     }
 
-    // ´Ó×Ö·û´®ÌáÈ¡Êı×Ö
+    // ä»å­—ç¬¦ä¸²æå–æ•°å­—
     private string ExtractNumber(string input)
     {
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -208,43 +208,43 @@ public class RealTimeWeatherFetcher : MonoBehaviour
         return sb.ToString();
     }
 
-    // ¸üĞÂUIÏÔÊ¾
+    // æ›´æ–°UIæ˜¾ç¤º
     private void UpdateUI()
     {
         if (realTimeStatusText != null)
         {
-            // ÒÆ³ıÖĞÎÄºÍ¡ãC·ûºÅ£¬Ö»ÏÔÊ¾Êı×Ö
+            // ç§»é™¤ä¸­æ–‡å’ŒÂ°Cç¬¦å·ï¼Œåªæ˜¾ç¤ºæ•°å­—
             realTimeStatusText.text = $"Real-time Data\nCity: {city}\nTime: {beijingTime:HH:mm}\nWeather: {currentWeather}\nTemp: {currentTemperature}";
         }
     }
 
-    // »ñÈ¡Ó³ÉäºóµÄÌìÆøÀàĞÍ
+    // è·å–æ˜ å°„åçš„å¤©æ°”ç±»å‹
     public string GetMappedWeatherType()
     {
         if (weatherKeywords.ContainsKey(currentWeather))
         {
             return weatherKeywords[currentWeather];
         }
-        return "Clear"; // Ä¬ÈÏÎªÇçÌì
+        return "Clear"; // é»˜è®¤ä¸ºæ™´å¤©
     }
 
-    // ¸ù¾İµ±Ç°Ê±¼ä»ñÈ¡Ê±¼ä¶Î
+    // æ ¹æ®å½“å‰æ—¶é—´è·å–æ—¶é—´æ®µ
     public string GetTimeOfDay()
     {
         int hour = beijingTime.Hour;
 
-        if (hour >= 6 && hour < 17) return "Day";      // 6:00-16:59 °×Ìì
-        if (hour >= 17 && hour < 18) return "Dusk";    // 17:00-17:59 »Æ»è
-        return "Night";                               // 18:00-5:59 Ò¹Íí
+        if (hour >= 6 && hour < 17) return "Day";      // 6:00-16:59 ç™½å¤©
+        if (hour >= 17 && hour < 18) return "Dusk";    // 17:00-17:59 é»„æ˜
+        return "Night";                               // 18:00-5:59 å¤œæ™š
     }
 
-    // »ñÈ¡Ô­Ê¼Êı¾İ
+    // è·å–åŸå§‹æ•°æ®
     public DateTime GetCurrentBeijingTime() => beijingTime;
     public string GetCurrentWeather() => currentWeather;
     public float GetCurrentTemperature() => currentTemperature;
     public bool IsDataValid() => isDataValid;
 
-    // ÉèÖÃ³ÇÊĞ
+    // è®¾ç½®åŸå¸‚
     public void SetCity(string newCity)
     {
         city = newCity;
